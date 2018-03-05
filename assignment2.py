@@ -56,19 +56,29 @@ class GridMap:
         ## up,down,right,left moves allowed - mode A
         self.mode = 'A'
         self.path = self.greedySearch()
-        self.printGrid()
-        self.editGraph()
-        self.printGrid()
+        self.printGrid(self.grid)
+        solution1 = self.editGraph()
+        self.printGrid(solution1)
+
+        self.path = self.aStarSearch()
+        self.printGrid(self.grid)
+        solution2 = self.editGraph()
+        self.printGrid(solution2)
 
 
         ## up,down,diagonal,left,right moves allowed - mode B
         #self.mode = 'B'
 
     def editGraph(self):
-        self.path.remove(self.goal)
-        self.path.remove(self.start)
-        for move in self.path:
-            self.grid[move[0]][move[1]] = 'P'
+        temp_grid = list(self.grid)
+        temp_path = list(self.path)
+        
+        temp_path.remove(self.goal)
+        temp_path.remove(self.start)
+        for move in temp_path:
+            temp_grid[move[0]][move[1]] = 'P'
+        return temp_grid
+            
 
     def neighbours(self,current):
         row = current[1][0]
@@ -134,7 +144,31 @@ class GridMap:
 
 
 
-    #def aStarSearch(self):
+    def aStarSearch(self):
+        frontier = []
+        heapq.heappush(frontier, (0,self.start))
+        cameFrom = {}
+        csf = {}  #cost so far
+        cameFrom['S'] = None
+        csf[self.start] = 0
+
+        while not frontier == []:
+            current = heapq.heappop(frontier)
+            heapq.heapify(frontier)
+            if current[1] == self.goal:
+                break
+            neighbours = self.neighbours(current)
+            for next in neighbours:
+                # new Cost = csf[current] + graph.cost(current,next)
+                # i think all of the costs are == 1
+                newCost = csf[current[1]] + 1
+                if next not in csf or newCost < csf[next]:
+                    csf[next] = newCost
+                    priority = newCost + self.hFunEuclidean(self.goal,next)
+                    heapq.heappush(frontier, (priority,next))
+                    cameFrom[next] = current[1]
+        path = self.greedyReconstruct(cameFrom)
+        return path
 
 
 
@@ -144,18 +178,19 @@ class GridMap:
     def hFunEuclidean(self, a, b):
         return sqrt(pow(b[0]-a[0], 2) + pow(b[1] - a[1], 2))
 
-# def hFunManhattan(a, b):
-#     return abs(a.x - b.x) + abs(a.y - b.y)
+    def hFunManhattan(a, b):
+        return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
-# def hFunChebyshev(a, b):
-#     return max(abs(b.x-a.x),abs(b.y-a.y))
+    def hFunChebyshev(a, b):
+        return max(abs(b[0]-a[0]),abs(b[1]-a[1]))
 
     ### Debugging and Stats ###
-    def printGrid(self):
+    def printGrid(self,graph):
         for i in range(self.rows):
             for j in range(self.columns):
-                print(self.grid[i][j], end=' ')
+                print(graph[i][j], end=' ')
             print()
+        print()
 
 
 def main():
