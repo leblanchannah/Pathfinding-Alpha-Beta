@@ -47,6 +47,11 @@ class GridMap:
         self.goal = goal
         self.rows = len(grid)
         self.columns = len(grid[0])
+
+        print("Goal:")
+        print(self.goal)
+        print("Start:")
+        print(self.start)
   
         ## up,down,right,left moves allowed - mode A
         self.mode = 'A'
@@ -54,7 +59,7 @@ class GridMap:
 
 
         ## up,down,diagonal,left,right moves allowed - mode B
-        self.mode = 'B'
+        #self.mode = 'B'
 
 
     def neighbours(self,current):
@@ -64,20 +69,27 @@ class GridMap:
         if row != 0: #cant move up
             around.append((row-1,col))
             if self.mode == 'B' and col != 0:
-                around.append((row-1,col-1))
+                if self.grid[row-1][col-1] != 'X':
+                    around.append((row-1,col-1))
             if self.mode == 'B' and col != self.columns:
-                around.append((row-1,col+1))
-        if row == self.rows:  #cant move down
-            around.append((row+1,col))
+                if self.grid[row-1][col+1] != 'X':
+                    around.append((row-1,col+1))
+        if row != self.rows:  #cant move down
+            if self.grid[row+1][col] != 'X':
+                around.append((row+1,col))
             if self.mode == 'B' and col != 0:
-                around.append((row+1,col-1))
+                if self.grid[row+1][col-1] != 'X':
+                    around.append((row+1,col-1))
             if self.mode == 'B' and col != self.columns:
-                around.append((row+1,col+1))
+                if self.grid[row+1][col+1] != 'X':
+                    around.append((row+1,col+1))
         if col != 0: #cant move left
-            around.append((row,col-1))
+            if self.grid[row][col-1] != 'X':
+                around.append((row,col-1))
         if col != self.columns: #cant move right
-            around.append((row,col+1))
-        print(around)
+            if self.grid[row][col+1] != 'X':
+                around.append((row,col+1))
+
         return around
         
 
@@ -90,7 +102,6 @@ class GridMap:
         heapq.heappush(frontier, (0,self.start))
         cameFrom = {}
         cameFrom['S'] = None
-
         while not frontier == []:
             current = heapq.heappop(frontier)
             if current[1] == self.goal:
@@ -99,7 +110,7 @@ class GridMap:
             for next in neighbours:
                 priority = self.hFunEuclidean(self.goal,next)
                 heapq.heappush(frontier, (priority,next))
-                cameFrom[next] = current
+                cameFrom[next] = current[1]
         print(cameFrom)
 
 
