@@ -55,12 +55,20 @@ class GridMap:
   
         ## up,down,right,left moves allowed - mode A
         self.mode = 'A'
-        self.greedySearch()
+        self.path = self.greedySearch()
+        self.printGrid()
+        self.editGraph()
+        self.printGrid()
 
 
         ## up,down,diagonal,left,right moves allowed - mode B
         #self.mode = 'B'
 
+    def editGraph(self):
+        self.path.remove(self.goal)
+        self.path.remove(self.start)
+        for move in self.path:
+            self.grid[move[0]][move[1]] = 'P'
 
     def neighbours(self,current):
         row = current[1][0]
@@ -93,6 +101,14 @@ class GridMap:
         return around
         
 
+    def greedyReconstruct(self, cameFrom):
+        current = self.goal
+        path = [current]
+        while current != self.start:
+            current = cameFrom[current]
+            path.append(current)
+        path.reverse()
+        return path
 
     def greedySearch(self):
         #priority queue https://docs.python.org/2/library/heapq.html
@@ -104,14 +120,17 @@ class GridMap:
         cameFrom['S'] = None
         while not frontier == []:
             current = heapq.heappop(frontier)
+            heapq.heapify(frontier)
             if current[1] == self.goal:
                 break
             neighbours = self.neighbours(current)
             for next in neighbours:
-                priority = self.hFunEuclidean(self.goal,next)
-                heapq.heappush(frontier, (priority,next))
-                cameFrom[next] = current[1]
-        print(cameFrom)
+                if next not in cameFrom:
+                    priority = self.hFunEuclidean(self.goal,next)
+                    heapq.heappush(frontier, (priority,next))
+                    cameFrom[next] = current[1]
+        path = self.greedyReconstruct(cameFrom)
+        return path
 
 
 
