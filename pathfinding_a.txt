@@ -1,12 +1,23 @@
 XXXXXXXXXX
-X___XX_X_X
+X___XX_XGX
 X_X__X___X
 XSXX___X_X
 X_X__X___X
 X___XX_X_X
 X_X__X_X_X
-X__G_X___X
+X____X___X
 XXXXXXXXXX
+
+XXXXXXXXXXXXXXXXXXXX
+XS__XX_XGXX___XX_X_X
+X_X__X___XX_X______X
+X_X__X______X__X___X
+X_X__XX__XX_X__X___X
+X______X_XX_X__X___X
+X_X__X_X____X__X___X
+X____X___XX_X__X___X
+XXXXXXXXXXXXXXXXXXXX
+
 
 
 

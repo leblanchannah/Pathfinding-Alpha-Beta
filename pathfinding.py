@@ -1,6 +1,7 @@
 ###Pathfinding###
 
 import heapq
+import copy
 from math import sqrt
 
  #Greedy algorithm
@@ -54,24 +55,41 @@ class GridMap:
         print(self.start)
   
         ## up,down,right,left moves allowed - mode A
-        self.mode = 'A'
-        self.path = self.greedySearch()
-        self.printGrid(self.grid)
-        solution1 = self.editGraph()
-        self.printGrid(solution1)
-
-        self.path = self.aStarSearch()
-        self.printGrid(self.grid)
-        solution2 = self.editGraph()
-        self.printGrid(solution2)
+        # self.mode = 'A'
+        # print("----- UP DOWN RIGHT LEFT -----")
+        # print("ORIGINAL: ")
+        # self.path = self.greedySearch()
+        # self.printGrid(self.grid)
+        # print("GREEDY")
+        # print(self.path)
+        # solution1 = self.editGraph()
+        # self.printGrid(solution1)
+        # print("A*")
+        # self.path = self.aStarSearch()
+        # print(self.path)
+        # solution2 = self.editGraph()
+        # self.printGrid(solution2)
 
 
         ## up,down,diagonal,left,right moves allowed - mode B
-        #self.mode = 'B'
+        self.mode = 'B'
+        print("----- UP DOWN RIGHT LEFT DIAGONALS -----")
+        print("ORIGINAL: ")
+        self.printGrid(self.grid)
+        self.path = self.greedySearch()
+        print("GREEDY")
+        print(self.path)
+        solution3 = self.editGraph()
+        self.printGrid(solution3)
+        self.path = self.aStarSearch()
+        print("A*")
+        print(self.path)
+        solution4 = self.editGraph()
+        self.printGrid(solution4)
 
     def editGraph(self):
-        temp_grid = list(self.grid)
-        temp_path = list(self.path)
+        temp_grid = copy.deepcopy(self.grid)
+        temp_path = copy.deepcopy(self.path)
         
         temp_path.remove(self.goal)
         temp_path.remove(self.start)
@@ -85,7 +103,8 @@ class GridMap:
         col = current[1][1]
         around = []
         if row != 0: #cant move up
-            around.append((row-1,col))
+            if self.grid[row-1][col] != 'X':
+                around.append((row-1,col))
             if self.mode == 'B' and col != 0:
                 if self.grid[row-1][col-1] != 'X':
                     around.append((row-1,col-1))
