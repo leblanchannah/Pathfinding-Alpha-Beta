@@ -5,10 +5,11 @@ import sys
 class Graph:
     def __init__(self, nodesInput, edgesInput):
         self.root = None
+        self.numLeavesExamined = 0
         self.nodes = self.parseNodes(nodesInput)     # dictionary where the key is the node (ie. "A"), and the value is "MIN" or "MAX"
         self.edges = self.parseEdges(edgesInput)     # dictionary of lists representing edges
-        score = self.alphaBeta(self.root, sys.maxsize, -sys.maxsize-1)
-        print(score)
+        self.score = self.alphaBeta(self.root, -sys.maxsize-1, sys.maxsize)
+        print("Score: " + str(self.score) + "; Leaf Nodes Examined: " + str(self.numLeavesExamined))
 
     def parseNodes(self, nodesInput):
         nodes = {}
@@ -40,30 +41,43 @@ class Graph:
         currentMinMax = self.nodes[current]
         currentEdges = self.edges[current]
         print(current)
-        print(currentMinMax)
-        print(currentEdges)
+        #print(currentMinMax)
+        #print(currentEdges)
         isMax = False                       # MIN
         if currentMinMax == 'MAX':
             isMax = True
         hasLeaves = self.hasLeaves(currentEdges)
         if hasLeaves:
-            leaves = [int(x) for x in currentEdges if x.isdigit() and x != None]
+            leaves = [int(x) for x in currentEdges if x.isdigit() and x is not None]
             if isMax:
-                print(max(leaves))
-                return max(leaves)
+                max = 0
+                for leaf in leaves:
+                    self.numLeavesExamined += 1
+                    if leaf > beta:
+                        self.edges[current] = []
+                        return beta
+                    if leaf > max:
+                        max = leaf
+                return max
             else:
-                print(min(leaves))
-                return min(leaves)
+                min = sys.maxsize
+                for leaf in leaves:
+                    self.numLeavesExamined += 1
+                    if leaf < alpha:
+                        self.edges[current] = []
+                        return alpha
+                    if leaf < min:
+                        min = leaf
+                return min
         if isMax:
             for child in currentEdges:
+                #print(child)
                 value = self.alphaBeta(child, alpha, beta)
                 if value > alpha:
                     alpha = value
                 if alpha >= beta:
                     self.edges[current] = []
-                    print(alpha)
                     return alpha
-            print(alpha)
             return alpha
         else:
             for child in currentEdges:
@@ -72,9 +86,7 @@ class Graph:
                     beta = value
                 if alpha >= beta:
                     self.edges[current] = []
-                    print(beta)
                     return beta
-            print(beta)
             return beta
 
     def hasLeaves(self, edges):
