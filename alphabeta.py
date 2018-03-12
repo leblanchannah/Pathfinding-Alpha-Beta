@@ -9,7 +9,6 @@ class Graph:
         self.nodes = self.parseNodes(nodesInput)     # dictionary where the key is the node (ie. "A"), and the value is "MIN" or "MAX"
         self.edges = self.parseEdges(edgesInput)     # dictionary of lists representing edges
         self.score = self.alphaBeta(self.root, -sys.maxsize-1, sys.maxsize)
-        print("Score: " + str(self.score) + "; Leaf Nodes Examined: " + str(self.numLeavesExamined))
 
     def parseNodes(self, nodesInput):
         nodes = {}
@@ -23,7 +22,6 @@ class Graph:
             if i == 0:
                 self.root = letter
             i += 1
-        print(nodes)
         return nodes
 
     def parseEdges(self, edgesInput):
@@ -34,15 +32,11 @@ class Graph:
             node1 = temp[0].split("(")[1]
             node2 = temp[1].split(")")[0]
             edges.setdefault(node1,[]).append(node2)
-        print(edges)
         return edges
 
     def alphaBeta(self, current, alpha, beta):
         currentMinMax = self.nodes[current]
         currentEdges = self.edges[current]
-        print(current)
-        #print(currentMinMax)
-        #print(currentEdges)
         isMax = False                       # MIN
         if currentMinMax == 'MAX':
             isMax = True
@@ -95,9 +89,24 @@ class Graph:
                 return True
         return False
 
+def solvePrunes():
+    f = open("alphabeta.txt", "r")
+    graphNumber = 0
+    for line in f:
+        if line == '\n':
+            continue
+        graphNumber += 1
+        parts = line.split(" ")
+        nodes = parts[0]
+        edges = parts[1]
+        g = Graph(nodes, edges)
+        print("Graph " + str(graphNumber) + ": Score: " + str(g.score) + "; Leaf Nodes Examined: " + str(g.numLeavesExamined))
+
+
 def main():
+    solvePrunes()
     nodes = "{(A,MAX),(B,MIN),(C,MIN),(D,MAX),(E,MAX),(F,MAX),(G,MAX)}"
     edges = "{(A,B),(A,C),(B,D),(B,E),(C,F),(C,G),(D,4),(D,3),(E,2),(E,7),(F,3),(F,2),(G,2),(G,8)}"
-    g = Graph(nodes, edges)
+    #g = Graph(nodes, edges)
 
 main()
