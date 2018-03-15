@@ -9,19 +9,30 @@ from math import sqrt
 
  #A* algorithm  
 
-def solveGrids(inFile, outFile):
+def solveGrids(inFile, outFile, mode):
     #each grid is separated by an empty line
     #read in problems one by one
     #as reading input, note goal=G and start=S
-    f = open("pathfinding_a.txt","r") 
+    f = open(inFile,"r")
+    out = open(outFile,"w") 
     count = 0
     grid = []
     start = ()
     goal = () 
     for line in f:
-        if line in ('\n'): #should add or next line is eof
+        if line in ('\n'):
             if grid != []:
-                GridMap(grid,start,goal)
+                soln = GridMap(grid,start,goal,mode)
+                for i in range(len(soln.greedy)):
+                    for j in range(len(soln.greedy[0])):
+                        out.write(soln.greedy[i][j] + " ")
+                    out.write("\n")
+                out.write("\n")
+                for i in range(len(soln.astar)):
+                    for j in range(len(soln.astar[0])):
+                        out.write(soln.astar[i][j] + " ")
+                    out.write("\n")
+                out.write("\n")
             grid = []
             start = ()
             goal = ()
@@ -37,95 +48,44 @@ def solveGrids(inFile, outFile):
                 elif row[section] == 'S':
                     start = (count,section)
             count += 1
+    f.close()
+    out.close()
 
 
 
 
 class GridMap:
-    def __init__(self,grid,start,goal):
+    def __init__(self,grid,start,goal,mode):
         self.grid = grid
         self.start = start
         self.goal = goal
         self.rows = len(grid)
         self.columns = len(grid[0])
-
-        print("Goal:")
-        print(self.goal)
-        print("Start:")
-        print(self.start)
   
         ## up,down,right,left moves allowed - mode A
-        self.mode = 'A'
-        # print("----- UP DOWN RIGHT LEFT -----")
-        # print("ORIGINAL: ")
+        if mode == 'a':
+            self.mode = 'A'
+        else:
+            self.mode = 'B'
         self.path = self.greedySearch()
-        # self.printGrid(self.grid)
-        # print("GREEDY")
-        # print(self.path)
-        solution1 = self.editGraph()
-        # self.printGrid(solution1)
-        out = open("pathfinding_a_out.txt", "w")
-        out.write("GREEDY\n")
-        for i in range(self.rows):
-            for j in range(self.columns):
-                out.write(solution1[i][j] + " ")
-            out.write("\n")
-        # print("A*")
+        self.greedy = self.editGraph()
         self.path = self.aStarSearch()
-        # print(self.path)
-        solution2 = self.editGraph()
-        # self.printGrid(solution2)
-        out.write("A*\n")
-        for i in range(self.rows):
-            for j in range(self.columns):
-                out.write(solution2[i][j] + " ")
-            out.write("\n")
-        out.close()
+        self.astar = self.editGraph()
+        return None
 
-
-        ## up,down,diagonal,left,right moves allowed - mode B
-        self.mode = 'B'
-        print("----- UP DOWN RIGHT LEFT DIAGONALS -----")
-        print("ORIGINAL: ")
-        self.printGrid(self.grid)
-        self.path = self.greedySearch()
-        print("GREEDY")
-        print(self.path)
-        solution3 = self.editGraph()
-        self.printGrid(solution3)
-
-        out = open("pathfinding_b_out.txt", "w")
-        out.write("GREEDY\n")
-        for i in range(self.rows):
-            for j in range(self.columns):
-                out.write(solution3[i][j] + " ")
-            out.write("\n")
-
-        self.path = self.aStarSearch()
-        print("A*")
-        print(self.path)
-        solution4 = self.editGraph()
-        self.printGrid(solution4)
-
-        out.write("A*\n")
-        for i in range(self.rows):
-            for j in range(self.columns):
-                out.write(solution4[i][j] + " ")
-            out.write("\n")
-        out.write("\n")
-        out.close()
-
+    #editGraphs adds solution to grid, uses 'P' to show path
+    #returns grid
     def editGraph(self):
+        # deep copy to clone 2d lists
         temp_grid = copy.deepcopy(self.grid)
         temp_path = copy.deepcopy(self.path)
-        
         temp_path.remove(self.goal)
         temp_path.remove(self.start)
         for move in temp_path:
             temp_grid[move[0]][move[1]] = 'P'
         return temp_grid
             
-
+    #neighbours determines the possible moves for the search 
     def neighbours(self,current):
         row = current[1][0]
         col = current[1][1]
@@ -154,10 +114,10 @@ class GridMap:
         if col != self.columns: #cant move right
             if self.grid[row][col+1] != 'X':
                 around.append((row,col+1))
-
+        #returns list of tuples (row,col) of legal moves 
         return around
         
-
+    # reconstructs path from search
     def greedyReconstruct(self, cameFrom):
         current = self.goal
         path = [current]
@@ -198,7 +158,6 @@ class GridMap:
         csf = {}  #cost so far
         cameFrom['S'] = None
         csf[self.start] = 0
-
         while not frontier == []:
             current = heapq.heappop(frontier)
             heapq.heapify(frontier)
@@ -207,7 +166,7 @@ class GridMap:
             neighbours = self.neighbours(current)
             for next in neighbours:
                 # new Cost = csf[current] + graph.cost(current,next)
-                # i think all of the costs are == 1
+                # all costs are == 1
                 newCost = csf[current[1]] + 1
                 if next not in csf or newCost < csf[next]:
                     csf[next] = newCost
@@ -241,6 +200,6 @@ class GridMap:
 
 
 def main():
-    solveGrids("pathfinding_a.text","")
-
+    solveGrids("pathfinding_a.txt","pathfinding_a_out.txt","a")
+    solveGrids("pathfinding_a.txt","pathfinding_b_out.txt","b")
 main()
