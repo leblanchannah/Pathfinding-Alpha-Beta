@@ -55,20 +55,32 @@ class GridMap:
         print(self.start)
   
         ## up,down,right,left moves allowed - mode A
-        # self.mode = 'A'
+        self.mode = 'A'
         # print("----- UP DOWN RIGHT LEFT -----")
         # print("ORIGINAL: ")
-        # self.path = self.greedySearch()
+        self.path = self.greedySearch()
         # self.printGrid(self.grid)
         # print("GREEDY")
         # print(self.path)
-        # solution1 = self.editGraph()
+        solution1 = self.editGraph()
         # self.printGrid(solution1)
+        out = open("pathfinding_a_out.txt", "w")
+        out.write("GREEDY\n")
+        for i in range(self.rows):
+            for j in range(self.columns):
+                out.write(solution1[i][j] + " ")
+            out.write("\n")
         # print("A*")
-        # self.path = self.aStarSearch()
+        self.path = self.aStarSearch()
         # print(self.path)
-        # solution2 = self.editGraph()
+        solution2 = self.editGraph()
         # self.printGrid(solution2)
+        out.write("A*\n")
+        for i in range(self.rows):
+            for j in range(self.columns):
+                out.write(solution2[i][j] + " ")
+            out.write("\n")
+        out.close()
 
 
         ## up,down,diagonal,left,right moves allowed - mode B
@@ -81,11 +93,27 @@ class GridMap:
         print(self.path)
         solution3 = self.editGraph()
         self.printGrid(solution3)
+
+        out = open("pathfinding_b_out.txt", "w")
+        out.write("GREEDY\n")
+        for i in range(self.rows):
+            for j in range(self.columns):
+                out.write(solution3[i][j] + " ")
+            out.write("\n")
+
         self.path = self.aStarSearch()
         print("A*")
         print(self.path)
         solution4 = self.editGraph()
         self.printGrid(solution4)
+
+        out.write("A*\n")
+        for i in range(self.rows):
+            for j in range(self.columns):
+                out.write(solution4[i][j] + " ")
+            out.write("\n")
+        out.write("\n")
+        out.close()
 
     def editGraph(self):
         temp_grid = copy.deepcopy(self.grid)
