@@ -1,3 +1,4 @@
+Greedy
 X X X X X X X X X X 
 X _ P P X X _ X G X 
 X P X _ P X P P _ X 
@@ -7,7 +8,7 @@ X _ _ _ X X _ X _ X
 X _ X _ _ X _ X _ X 
 X _ _ _ _ X _ _ _ X 
 X X X X X X X X X X 
-
+A*
 X X X X X X X X X X 
 X _ P P X X _ X G X 
 X P X _ P X P P _ X 
@@ -17,7 +18,7 @@ X _ _ _ X X _ X _ X
 X _ X _ _ X _ X _ X 
 X _ _ _ _ X _ _ _ X 
 X X X X X X X X X X 
-
+Greedy
 X X X X X X X X X X X X X X X X X X X X 
 X S P P X X _ X G X X _ _ _ X X _ X _ X 
 X _ X _ P X _ _ P X X _ X _ _ _ _ _ _ X 
@@ -27,7 +28,7 @@ X _ _ _ _ P P X _ X X _ X _ _ X _ _ _ X
 X _ X _ _ X _ X _ _ _ _ X _ _ X _ _ _ X 
 X _ _ _ _ X _ _ _ X X _ X _ _ X _ _ _ X 
 X X X X X X X X X X X X X X X X X X X X 
-
+A*
 X X X X X X X X X X X X X X X X X X X X 
 X S P _ X X _ X G X X _ _ _ X X _ X _ X 
 X _ X P _ X _ _ P X X _ X _ _ _ _ _ _ X 
@@ -37,4 +38,3 @@ X _ _ _ _ P P X _ X X _ X _ _ X _ _ _ X
 X _ X _ _ X _ X _ _ _ _ X _ _ X _ _ _ X 
 X _ _ _ _ X _ _ _ X X _ X _ _ X _ _ _ X 
 X X X X X X X X X X X X X X X X X X X X 
-

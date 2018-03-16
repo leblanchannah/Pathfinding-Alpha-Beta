@@ -23,16 +23,17 @@ def solveGrids(inFile, outFile, mode):
         if line in ('\n'):
             if grid != []:
                 soln = GridMap(grid,start,goal,mode)
+                out.write("Greedy\n")
                 for i in range(len(soln.greedy)):
                     for j in range(len(soln.greedy[0])):
                         out.write(soln.greedy[i][j] + " ")
                     out.write("\n")
-                out.write("\n")
+                out.write("A*\n")
                 for i in range(len(soln.astar)):
                     for j in range(len(soln.astar[0])):
                         out.write(soln.astar[i][j] + " ")
                     out.write("\n")
-                out.write("\n")
+
             grid = []
             start = ()
             goal = ()
@@ -86,7 +87,7 @@ class GridMap:
         return temp_grid
             
     #neighbours determines the possible moves for the search 
-    def neighbours(self,current):
+    def neighbors(self,current):
         row = current[1][0]
         col = current[1][1]
         around = []
@@ -140,8 +141,8 @@ class GridMap:
             heapq.heapify(frontier)
             if current[1] == self.goal:
                 break
-            neighbours = self.neighbours(current)
-            for next in neighbours:
+            neighbors = self.neighbors(current)
+            for next in neighbors:
                 if next not in cameFrom:
                     priority = self.hFunEuclidean(self.goal,next)
                     heapq.heappush(frontier, (priority,next))
@@ -163,8 +164,8 @@ class GridMap:
             heapq.heapify(frontier)
             if current[1] == self.goal:
                 break
-            neighbours = self.neighbours(current)
-            for next in neighbours:
+            neighbors = self.neighbors(current)
+            for next in neighbors:
                 # new Cost = csf[current] + graph.cost(current,next)
                 # all costs are == 1
                 newCost = csf[current[1]] + 1
