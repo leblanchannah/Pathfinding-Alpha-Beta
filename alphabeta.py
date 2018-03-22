@@ -67,7 +67,7 @@ class Graph:
                 max = 0
                 for leaf in leaves:
                     self.numLeavesExamined += 1
-                    if leaf > beta:
+                    if leaf >= beta:
                         # Cut-off search
                         self.edges[current] = []
                         return beta
@@ -79,7 +79,7 @@ class Graph:
                 min = sys.maxsize
                 for leaf in leaves:
                     self.numLeavesExamined += 1
-                    if leaf < alpha:
+                    if leaf <= alpha:
                         # Cut-off search
                         self.edges[current] = []
                         return alpha
