@@ -1,5 +1,5 @@
-###Pathfinding###
-
+#Hannah LeBlanc
+#Spencer Edwards
 import copy
 from math import sqrt
  #Greedy algorithm
